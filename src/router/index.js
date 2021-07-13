@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-Vue.use(VueRouter)
 
 //获取原型对象上的push函数
 const originalPush = VueRouter.prototype.push
@@ -10,26 +9,35 @@ VueRouter.prototype.push = function push(location) {
   return originalPush.call(this, location).catch(err => err)
 }
 
+//获取原型对象上的replace函数
+const originalReplace = VueRouter.prototype.replace
+//修改原型对象中的replace方法
+VueRouter.prototype.replace = function push(location) {
+  return originalReplace.call(this, location).catch(err => err)
+}
+
+Vue.use(VueRouter)
+
 const routes = [
   {
-    path: '',
+    path: '/',
     redirect: '/home'
   },
   {
     path: '/home',
-    component: () => import('../view/home/Home.vue')
+    component: () => import('../views/home/Home.vue')
   },
   {
     path: '/category',
-    component: () => import('../view/category/Category.vue')
+    component: () => import('../views/category/Category.vue')
   },
   {
     path: '/cart',
-    component: () => import('../view/cart/Cart.vue')
+    component: () => import('../views/cart/Cart.vue')
   },
   {
     path: '/profile',
-    component: () => import('../view/profile/Profile.vue')
+    component: () => import('../views/profile/Profile.vue')
   },
 
 ]

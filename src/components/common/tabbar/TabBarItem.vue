@@ -50,7 +50,10 @@ export default {
   flex: 1;
 }
 .tab-bar-item img {
-  width: 30%;
+  width: 25%;
+}
+.tab-bar-item div {
+  font-size: 13px;
 }
 .active {
   color: red;
