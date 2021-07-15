@@ -22,6 +22,9 @@ Vue.use(Lazyload, {
   loading: require('@/assets/img/common/placeholder.png')
 })
 
+// 全局事件总线
+Vue.prototype.$bus = new Vue()
+
 new Vue({
   router,
   store,
