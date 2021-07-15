@@ -15,3 +15,11 @@ export const imgListenerMixin = {
     this.$bus.$on("imgLoad", this.imgListener);
   },
 }
+
+export const backTopMixin = {
+  data() {
+    return {
+
+    }
+  }
+}

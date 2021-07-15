@@ -25,8 +25,10 @@
       <!-- 商品 -->
       <goods-list :goods="goods[curType].list" />
     </scroll>
-
     <!-- 回到顶部 -->
+    <transition name="scroll">
+      <back-top @click.native="backTop" v-show="curPosition >= 1500" />
+    </transition>
   </div>
 </template>
 
@@ -36,7 +38,8 @@ import Swiper from "@/components/common/swiper/Swiper.vue";
 import RecommendView from "./children/RecommendView.vue";
 import FeatureView from "./children/FeatureView.vue";
 import TabControl from "@/components/content/tabControl/TabControl.vue";
-import GoodsList from "../../components/content/goods/GoodsList.vue";
+import GoodsList from "@/components/content/goods/GoodsList.vue";
+import BackTop from "@/components/content/backtop/BackTop.vue";
 
 import Scroll from "@/components/common/scroll/Scroll.vue";
 
@@ -53,6 +56,7 @@ export default {
     FeatureView,
     TabControl,
     GoodsList,
+    BackTop,
   },
   props: {},
   data() {
@@ -67,6 +71,7 @@ export default {
       },
       curType: "pop",
       imgListener: null,
+      curPosition: 0,
     };
   },
   mixins: [imgListenerMixin],
@@ -94,11 +99,16 @@ export default {
       });
     },
     tabClick() {},
-    backTopScroll() {},
+    backTopScroll(position) {
+      this.curPosition = position ? -position.y : 0;
+    },
     loadMore() {
       this._getHomeGoodsData(this.curType);
     },
     swiperLoad() {},
+    backTop() {
+      this.$refs.scroll.scrollTo(0, 0);
+    },
   },
 };
 </script>
@@ -122,5 +132,21 @@ export default {
   right: 0;
   top: 44px;
   bottom: 50px;
+}
+
+/* vue的淡入淡出动画 */
+.scroll-enter-active,
+.scroll-leave-active {
+  transition: all 0.3s;
+}
+
+.scroll-enter,
+.scroll-leave-to {
+  opacity: 0;
+}
+
+.scroll-enter-to,
+.scroll-leave {
+  opacity: 1;
 }
 </style>
