@@ -5,6 +5,14 @@
       <div slot="center">购物街</div>
     </nav-bar>
 
+    <tab-control
+      :titles="tabControlTitles"
+      @tabClick="tabClick"
+      class="home-tab-control"
+      ref="tabControl"
+      v-show="isShow"
+    />
+
     <!-- tabcontrol -->
     <scroll
       class="scroll-height"
@@ -21,7 +29,12 @@
       <!-- 本周流行 -->
       <feature-view />
       <!-- tabControl -->
-      <tab-control :titles="tabControlTitles" @tabClick="tabClick" />
+      <tab-control
+        :titles="tabControlTitles"
+        @tabClick="tabClick"
+        class="home-tab-control"
+        ref="tabControl2"
+      />
       <!-- 商品 -->
       <goods-list :goods="goods[curType].list" />
     </scroll>
@@ -72,6 +85,8 @@ export default {
       curType: "pop",
       imgListener: null,
       curPosition: 0,
+      // 当前吸顶的位置
+      tabOffsetTop: 0,
     };
   },
   mixins: [imgListenerMixin],
@@ -80,6 +95,11 @@ export default {
     this._getHomeGoodsData("pop");
     this._getHomeGoodsData("new");
     this._getHomeGoodsData("sell");
+  },
+  computed: {
+    isShow() {
+      return this.curPosition > this.tabOffsetTop;
+    },
   },
   methods: {
     // 异步网络请求数据方法
@@ -105,7 +125,11 @@ export default {
     loadMore() {
       this._getHomeGoodsData(this.curType);
     },
-    swiperLoad() {},
+    // 监听轮播图加载完成
+    swiperLoad() {
+      // 获取tabControl的位子
+      this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop;
+    },
     backTop() {
       this.$refs.scroll.scrollTo(0, 0);
     },
@@ -124,6 +148,13 @@ export default {
   background-color: #ff8198;
   position: relative;
   z-index: 9;
+}
+
+/* 导航吸顶 */
+.home-tab-control {
+  position: relative;
+  z-index: 1;
+  background-color: #fff;
 }
 
 .scroll-height {

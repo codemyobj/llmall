@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <router-view />
-    <main-tab-bar v-show="$store.getters.tabBarShow" />
+    <main-tab-bar class="tabbar" v-show="$store.getters.tabBarShow" />
   </div>
 </template>
 
@@ -18,4 +18,8 @@ export default {
 
 <style>
 @import "./assets/css/base.css";
+.tabbar {
+  position: relative;
+  z-index: 2;
+}
 </style>
