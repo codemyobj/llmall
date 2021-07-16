@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <router-view />
+    <keep-alive>
+      <router-view />
+    </keep-alive>
     <main-tab-bar class="tabbar" v-show="$store.getters.tabBarShow" />
   </div>
 </template>

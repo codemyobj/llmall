@@ -53,11 +53,10 @@ import FeatureView from "./children/FeatureView.vue";
 import TabControl from "@/components/content/tabControl/TabControl.vue";
 import GoodsList from "@/components/content/goods/GoodsList.vue";
 import BackTop from "@/components/content/backtop/BackTop.vue";
-
 import Scroll from "@/components/common/scroll/Scroll.vue";
 
 import { getHomeMultiData, getHomeGoodsData } from "@/network/home";
-import { imgListenerMixin } from "@/common/mixin";
+import { imgListenerMixin, backTopMixin } from "@/common/mixin";
 
 export default {
   name: "Home",
@@ -84,17 +83,20 @@ export default {
       },
       curType: "pop",
       imgListener: null,
-      curPosition: 0,
       // 当前吸顶的位置
       tabOffsetTop: 0,
     };
   },
-  mixins: [imgListenerMixin],
+  mixins: [imgListenerMixin, backTopMixin],
   created() {
     this._getHomeMultiData();
     this._getHomeGoodsData("pop");
     this._getHomeGoodsData("new");
     this._getHomeGoodsData("sell");
+  },
+  // keep-alive 状态下进来的时候的生命周期
+  activated() {
+    this.$refs.scroll.refresh();
   },
   computed: {
     isShow() {
@@ -118,7 +120,21 @@ export default {
         this.goods[type].page += 1;
       });
     },
-    tabClick() {},
+    tabClick(index) {
+      switch (index) {
+        case 0:
+          this.curType = "pop";
+          break;
+        case 1:
+          this.curType = "new";
+          break;
+        case 2:
+          this.curType = "sell";
+          break;
+      }
+      this.$refs.tabControl.curIndex = index;
+      this.$refs.tabControl2.curIndex = index;
+    },
     backTopScroll(position) {
       this.curPosition = position ? -position.y : 0;
     },
@@ -129,9 +145,6 @@ export default {
     swiperLoad() {
       // 获取tabControl的位子
       this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop;
-    },
-    backTop() {
-      this.$refs.scroll.scrollTo(0, 0);
     },
   },
 };

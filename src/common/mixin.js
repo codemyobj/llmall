@@ -19,7 +19,12 @@ export const imgListenerMixin = {
 export const backTopMixin = {
   data() {
     return {
-
+      curPosition: 0
     }
+  },
+  methods: {
+    backTop() {
+      this.$refs.scroll.scrollTo(0, 0);
+    },
   }
 }
