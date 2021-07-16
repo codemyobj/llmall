@@ -2,7 +2,12 @@
   <div class="goods-list-box">
     <p class="recommend" v-show="isRecommend">推荐商品</p>
     <div class="goods-list">
-      <div class="goods-list-item" v-for="(item, index) in goods" :key="index">
+      <div
+        class="goods-list-item"
+        v-for="(item, index) in goods"
+        :key="index"
+        @click="goodItemClick(item)"
+      >
         <img
           v-lazy="showImage(item)"
           @load="imgLoad"
@@ -49,6 +54,13 @@ export default {
     },
     imgLoad() {
       this.$bus.$emit("imgLoad");
+    },
+    goodItemClick(item) {
+      if (item.iid) {
+        this.$router.push(`/detail/${item.iid}`);
+      } else {
+        this.$toast(item.title);
+      }
     },
   },
 };
