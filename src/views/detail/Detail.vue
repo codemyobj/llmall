@@ -8,6 +8,7 @@
       @backTopScroll="detailScroll"
     >
       <detail-swiper :swiper-list="banner" @imgLoad="imgLoad" />
+      <detail-base-info :goods="goods" />
     </scroll>
   </div>
 </template>
@@ -16,8 +17,9 @@
 import Scroll from "@/components/common/scroll/Scroll.vue";
 import DetailNavBar from "./children/DetailNavBar.vue";
 import DetailSwiper from "./children/DetailSwiper.vue";
+import DetailBaseInfo from "./children/DetailBaseInfo.vue";
 
-import { getProductDetail } from "@/network/detail";
+import { getProductDetail, Goods } from "@/network/detail";
 import { imgListenerMixin } from "@/common/mixin";
 
 export default {
@@ -26,12 +28,14 @@ export default {
     Scroll,
     DetailNavBar,
     DetailSwiper,
+    DetailBaseInfo,
   },
   props: {},
   data() {
     return {
       detailId: "",
       banner: [],
+      goods: {},
     };
   },
   mixins: [imgListenerMixin],
@@ -48,7 +52,16 @@ export default {
     },
     _getProductDetail(iid) {
       getProductDetail(iid).then((res) => {
-        this.banner = res.result.itemInfo.topImages;
+        const data = res.result;
+        console.log(data);
+        // 轮播图数据
+        this.banner = data.itemInfo.topImages;
+        // 商品基本数据
+        this.goods = new Goods(
+          data.itemInfo,
+          data.columns,
+          data.shopInfo.services
+        );
       });
     },
     imgLoad() {
