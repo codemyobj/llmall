@@ -57,6 +57,7 @@ import Scroll from "@/components/common/scroll/Scroll.vue";
 
 import { getHomeMultiData, getHomeGoodsData } from "@/network/home";
 import { imgListenerMixin, backTopMixin } from "@/common/mixin";
+import { Toast } from "vant";
 
 export default {
   name: "Home",
@@ -118,6 +119,8 @@ export default {
         const data = res.data;
         this.goods[type].list.push(...data.list);
         this.goods[type].page += 1;
+        // 调用finishPullUp可以一直加载更多
+        this.$refs.scroll.finishPullUp();
       });
     },
     tabClick(index) {

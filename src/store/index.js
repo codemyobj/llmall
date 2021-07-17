@@ -10,7 +10,7 @@ const state = {
   // 默认tabBar显示
   tabBarShow: true,
   // 是否开启请求加载
-  isLoading: true
+  isLoading: true,
 }
 
 export default new Vuex.Store({
