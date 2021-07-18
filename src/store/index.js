@@ -11,6 +11,8 @@ const state = {
   tabBarShow: true,
   // 是否开启请求加载
   isLoading: true,
+  // 购物车数据
+  cartList: []
 }
 
 export default new Vuex.Store({

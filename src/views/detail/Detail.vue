@@ -26,6 +26,13 @@
         class="detail-set-scroll"
       />
     </scroll>
+
+    <!-- backtop -->
+    <transition name="scroll">
+      <back-top @click.native="backTop" v-show="curPosition >= 1500" />
+    </transition>
+
+    <detail-bottom-bar @addToCart="addToCart" />
   </div>
 </template>
 
@@ -38,7 +45,9 @@ import DetailShopInfo from "./children/DetailShopInfo.vue";
 import DetailImagesInfo from "./children/DetailImagesInfo.vue";
 import DetailParamsInfo from "./children/DetailParamsInfo.vue";
 import DetailCommentInfo from "./children/DetailCommentInfo.vue";
+import DetailBottomBar from "./children/DetailBottomBar.vue";
 import GoodsList from "@/components/content/goods/GoodsList.vue";
+import BackTop from "@/components/content/backtop/BackTop.vue";
 
 import {
   getProductDetail,
@@ -47,7 +56,7 @@ import {
   Shop,
   GoodsParams,
 } from "@/network/detail";
-import { imgListenerMixin } from "@/common/mixin";
+import { imgListenerMixin, backTopMixin } from "@/common/mixin";
 
 export default {
   name: "Detail",
@@ -60,7 +69,9 @@ export default {
     DetailImagesInfo,
     DetailParamsInfo,
     DetailCommentInfo,
+    DetailBottomBar,
     GoodsList,
+    BackTop,
   },
   props: {},
   data() {
@@ -78,7 +89,11 @@ export default {
       detailIndex: 0,
     };
   },
-  mixins: [imgListenerMixin],
+  mixins: [imgListenerMixin, backTopMixin],
+  beforeCreate() {
+    //进入详情页隐藏tabbar
+    this.$store.commit("setTabBarShow", false);
+  },
   created() {
     //获取home传来的id
     this.detailId = this.$route.params.id;
@@ -87,11 +102,18 @@ export default {
     this._getProductDetail(this.detailId);
     this._getRecommend();
   },
+  beforeRouteLeave(to, from, next) {
+    this.$store.commit("setTabBarShow", true);
+    next();
+  },
+  destroyed() {
+    // 取消detail组件事件总线的监听
+    this.$bus.$off("imgLoad", this.imgListener);
+  },
   methods: {
     _getProductDetail(iid) {
       getProductDetail(iid).then((res) => {
         const data = res.result;
-        console.log(data);
         // 轮播图数据
         this.banner = data.itemInfo.topImages;
         // 商品基本数据
@@ -148,7 +170,7 @@ export default {
         this.$refs.scroll.scrollToElement(el[index], 300);
       });
     },
-    // 获取calssList
+    // 获取需要联动的classList
     getClassList() {
       //把array.from() 把伪数组转换为数组
       this.detailClassList = [];
@@ -157,7 +179,21 @@ export default {
       );
       let maxValue = 10000000;
       this.detailClassList.push({ offsetTop: maxValue });
-      console.log(this.detailClassList);
+    },
+    addToCart() {
+      // 1.获取需要展示到购物车的商品信息
+      const obj = {
+        image: this.banner[0],
+        title: this.goods.title,
+        desc: this.goods.desc,
+        price: this.goods.lowNowPrice,
+        id: this.detailId,
+      };
+
+      console.log(obj);
+
+      // 2.将商品数据传到购物车页面
+      this.$store.dispatch("setCateGoryData", obj);
     },
   },
 };
@@ -182,5 +218,21 @@ export default {
   right: 0;
   width: 100%;
   background-color: #fff;
+}
+
+/* vue的淡入淡出动画 */
+.scroll-enter-active,
+.scroll-leave-active {
+  transition: all 0.3s;
+}
+
+.scroll-enter,
+.scroll-leave-to {
+  opacity: 0;
+}
+
+.scroll-enter-to,
+.scroll-leave {
+  opacity: 1;
 }
 </style>
