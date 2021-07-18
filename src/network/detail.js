@@ -8,6 +8,11 @@ export function getProductDetail(iid) {
 }
 
 // 推荐区域
+export function getRecommend() {
+  return axios({
+    url: '/recommend'
+  }).catch(err => err)
+}
 
 // 商品详情类
 export class Goods {

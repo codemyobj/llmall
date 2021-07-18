@@ -11,9 +11,8 @@
         class="info-list"
         v-for="(image, imageIndex) in item.list"
         :key="imageIndex"
-        @load="imgLoad"
       >
-        <img :src="image" alt="" />
+        <img :src="image" alt="" @load="imgLoad" />
       </div>
     </div>
   </div>
@@ -41,7 +40,7 @@ export default {
     // 防抖处理 等图片全部加载完再发射事件
     imgLoad() {
       if (++this.count === this.imagesLength) {
-        this.$bus.$emit("imgLoad");
+        this.$emit("imgLoad");
       }
     },
   },
