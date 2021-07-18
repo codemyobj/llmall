@@ -16,6 +16,7 @@
       <detail-shop-info :shop="shopInfo" />
       <detail-images-info :detail-images="detailInfo" />
       <detail-params-info :paramsInfo="paramsInfo" />
+      <detail-comment-info :commentInfo="commentInfo" />
     </scroll>
   </div>
 </template>
@@ -28,6 +29,7 @@ import DetailBaseInfo from "./children/DetailBaseInfo.vue";
 import DetailShopInfo from "./children/DetailShopInfo.vue";
 import DetailImagesInfo from "./children/DetailImagesInfo.vue";
 import DetailParamsInfo from "./children/DetailParamsInfo.vue";
+import DetailCommentInfo from "./children/DetailCommentInfo.vue";
 
 import { getProductDetail, Goods, Shop, GoodsParams } from "@/network/detail";
 import { imgListenerMixin } from "@/common/mixin";
@@ -42,6 +44,7 @@ export default {
     DetailShopInfo,
     DetailImagesInfo,
     DetailParamsInfo,
+    DetailCommentInfo,
   },
   props: {},
   data() {
@@ -52,6 +55,7 @@ export default {
       shopInfo: {},
       detailInfo: {},
       paramsInfo: {},
+      commentInfo: {},
     };
   },
   mixins: [imgListenerMixin],
@@ -87,6 +91,10 @@ export default {
           data.itemParams.info,
           data.itemParams.rule || {}
         );
+        //商品评论信息
+        if (data.rate.cRate !== 0) {
+          this.commentInfo = data.rate.list[0] || {};
+        }
       });
     },
     imgLoad() {
