@@ -14,6 +14,7 @@
       <detail-swiper :swiper-list="banner" @imgLoad="imgLoad" />
       <detail-base-info :goods="goods" />
       <detail-shop-info :shop="shopInfo" />
+      <detail-images-info :detail-images="detailInfo" @load="imgLoad" />
     </scroll>
   </div>
 </template>
@@ -24,6 +25,7 @@ import DetailNavBar from "./children/DetailNavBar.vue";
 import DetailSwiper from "./children/DetailSwiper.vue";
 import DetailBaseInfo from "./children/DetailBaseInfo.vue";
 import DetailShopInfo from "./children/DetailShopInfo.vue";
+import DetailImagesInfo from "./children/DetailImagesInfo.vue";
 
 import { getProductDetail, Goods, Shop } from "@/network/detail";
 import { imgListenerMixin } from "@/common/mixin";
@@ -36,6 +38,7 @@ export default {
     DetailSwiper,
     DetailBaseInfo,
     DetailShopInfo,
+    DetailImagesInfo,
   },
   props: {},
   data() {
@@ -44,6 +47,7 @@ export default {
       banner: [],
       goods: {},
       shopInfo: {},
+      detailInfo: {},
     };
   },
   mixins: [imgListenerMixin],
@@ -70,8 +74,10 @@ export default {
           data.columns,
           data.shopInfo.services
         );
-        //商品基本数据
+        //店铺基本数据
         this.shopInfo = new Shop(data.shopInfo);
+        // 商品图片展示
+        this.detailInfo = data.detailInfo;
       });
     },
     imgLoad() {
