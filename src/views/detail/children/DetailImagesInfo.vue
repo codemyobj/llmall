@@ -41,7 +41,7 @@ export default {
     // 防抖处理 等图片全部加载完再发射事件
     imgLoad() {
       if (++this.count === this.imagesLength) {
-        this.$emit("imgLoad");
+        this.$bus.$emit("imgLoad");
       }
     },
   },

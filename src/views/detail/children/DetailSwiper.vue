@@ -28,7 +28,7 @@ export default {
   methods: {
     imgLoad() {
       if (this.isLoad) {
-        this.$emit("imgLoad");
+        this.$bus.$emit("imgLoad");
         this.isShow = false;
       }
     },

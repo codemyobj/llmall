@@ -11,10 +11,11 @@
       :probe-type="3"
       @backTopScroll="detailScroll"
     >
-      <detail-swiper :swiper-list="banner" @imgLoad="imgLoad" />
+      <detail-swiper :swiper-list="banner" />
       <detail-base-info :goods="goods" />
       <detail-shop-info :shop="shopInfo" />
-      <detail-images-info :detail-images="detailInfo" @load="imgLoad" />
+      <detail-images-info :detail-images="detailInfo" />
+      <detail-params-info :paramsInfo="paramsInfo" />
     </scroll>
   </div>
 </template>
@@ -26,8 +27,9 @@ import DetailSwiper from "./children/DetailSwiper.vue";
 import DetailBaseInfo from "./children/DetailBaseInfo.vue";
 import DetailShopInfo from "./children/DetailShopInfo.vue";
 import DetailImagesInfo from "./children/DetailImagesInfo.vue";
+import DetailParamsInfo from "./children/DetailParamsInfo.vue";
 
-import { getProductDetail, Goods, Shop } from "@/network/detail";
+import { getProductDetail, Goods, Shop, GoodsParams } from "@/network/detail";
 import { imgListenerMixin } from "@/common/mixin";
 
 export default {
@@ -39,6 +41,7 @@ export default {
     DetailBaseInfo,
     DetailShopInfo,
     DetailImagesInfo,
+    DetailParamsInfo,
   },
   props: {},
   data() {
@@ -48,6 +51,7 @@ export default {
       goods: {},
       shopInfo: {},
       detailInfo: {},
+      paramsInfo: {},
     };
   },
   mixins: [imgListenerMixin],
@@ -78,6 +82,11 @@ export default {
         this.shopInfo = new Shop(data.shopInfo);
         // 商品图片展示
         this.detailInfo = data.detailInfo;
+        // 商品参数信息
+        this.paramsInfo = new GoodsParams(
+          data.itemParams.info,
+          data.itemParams.rule || {}
+        );
       });
     },
     imgLoad() {
