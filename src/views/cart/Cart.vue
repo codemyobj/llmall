@@ -32,5 +32,10 @@ export default {
   },
 };
 </script>
-<style scoped lang='less'>
+<style scoped>
+.nav-bar {
+  font-weight: 700;
+  color: #fff;
+  background-color: #ff8198;
+}
 </style>
