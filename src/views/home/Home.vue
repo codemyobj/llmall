@@ -57,7 +57,6 @@ import Scroll from "@/components/common/scroll/Scroll.vue";
 
 import { getHomeMultiData, getHomeGoodsData } from "@/network/home";
 import { imgListenerMixin, backTopMixin } from "@/common/mixin";
-import { Toast } from "vant";
 
 export default {
   name: "Home",
@@ -86,6 +85,7 @@ export default {
       imgListener: null,
       // 当前吸顶的位置
       tabOffsetTop: 0,
+      saveY: 0,
     };
   },
   mixins: [imgListenerMixin, backTopMixin],
@@ -97,7 +97,13 @@ export default {
   },
   // keep-alive 状态下进来的时候的生命周期
   activated() {
+    this.$refs.scroll.scrollTo(0, this.saveY, 0);
     this.$refs.scroll.refresh();
+  },
+  deactivated() {
+    this.$bus.$off("imgLoad", this.imgListener);
+    this.saveY = this.$refs.scroll.getCurrentY();
+    console.log(this.saveY);
   },
   computed: {
     isShow() {

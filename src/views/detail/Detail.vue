@@ -1,6 +1,10 @@
 <template>
   <div class="detail">
-    <detail-nav-bar @titleItemClick="titleItemClick" ref="detailNavBar" />
+    <detail-nav-bar
+      @titleItemClick="titleItemClick"
+      ref="detailNavBar"
+      class="detail-nav"
+    />
     <scroll
       class="scroll-height"
       ref="scroll"
@@ -9,6 +13,7 @@
     >
       <detail-swiper :swiper-list="banner" @imgLoad="imgLoad" />
       <detail-base-info :goods="goods" />
+      <detail-shop-info :shop="shopInfo" />
     </scroll>
   </div>
 </template>
@@ -18,8 +23,9 @@ import Scroll from "@/components/common/scroll/Scroll.vue";
 import DetailNavBar from "./children/DetailNavBar.vue";
 import DetailSwiper from "./children/DetailSwiper.vue";
 import DetailBaseInfo from "./children/DetailBaseInfo.vue";
+import DetailShopInfo from "./children/DetailShopInfo.vue";
 
-import { getProductDetail, Goods } from "@/network/detail";
+import { getProductDetail, Goods, Shop } from "@/network/detail";
 import { imgListenerMixin } from "@/common/mixin";
 
 export default {
@@ -29,6 +35,7 @@ export default {
     DetailNavBar,
     DetailSwiper,
     DetailBaseInfo,
+    DetailShopInfo,
   },
   props: {},
   data() {
@@ -36,6 +43,7 @@ export default {
       detailId: "",
       banner: [],
       goods: {},
+      shopInfo: {},
     };
   },
   mixins: [imgListenerMixin],
@@ -62,6 +70,8 @@ export default {
           data.columns,
           data.shopInfo.services
         );
+        //商品基本数据
+        this.shopInfo = new Shop(data.shopInfo);
       });
     },
     imgLoad() {
@@ -75,6 +85,12 @@ export default {
 .detail {
   width: 100%;
   height: 100%;
+}
+
+.detail-nav {
+  position: relative;
+  z-index: 10;
+  background-color: #fff;
 }
 
 .scroll-height {

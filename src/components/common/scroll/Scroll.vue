@@ -76,6 +76,9 @@ export default {
     scrollToElement(el, time) {
       this.scroll.scrollToElement(el, time);
     },
+    getCurrentY() {
+      return this.scroll.y ? this.scroll.y : 0;
+    },
   },
 };
 </script>
