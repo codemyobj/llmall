@@ -190,8 +190,6 @@ export default {
         id: this.detailId,
       };
 
-      console.log(obj);
-
       // 2.将商品数据传到购物车页面
       this.$store.dispatch("setCateGoryData", obj);
     },

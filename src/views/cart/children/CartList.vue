@@ -1,6 +1,6 @@
 <template>
   <div class="cart-list">
-    <scroll class="scoll-heiht">
+    <scroll class="scoll-heiht" ref="scroll">
       <div class="shop-item" v-for="(item, index) in cartList" :key="index">
         <div class="item-selector">
           <van-checkbox @change="handleCheckedItem" v-model="item.checked" />
@@ -69,16 +69,58 @@ export default {
     },
   },
   created() {
+    //每次刷新页面获取本地存储购物车数据
     let list = JSON.parse(localStorage.getItem("cartList")) || [];
     if (list) {
       this.setCartList(list);
     }
   },
+  mounted() {
+    this.$refs.scroll.refresh();
+  },
   methods: {
-    ...mapMutations(["setCartList"]),
-    handleCheckedItem() {},
-    handleCheckedAll() {},
-    onSubmit() {},
+    ...mapMutations(["setCartList", "clearCartList"]),
+    //反选
+    handleCheckedItem() {
+      let result = this.cartList.filter((item) => item.checked);
+      this.checkedAll =
+        result.length > 0 && result.length === this.cartList.length;
+    },
+    //全局
+    handleCheckedAll() {
+      this.cartList.forEach((item) => (item.checked = this.checkedAll));
+    },
+    //提交
+    onSubmit() {
+      if (this.checkedLength === 0) {
+        this.$toast({
+          type: "fail",
+          message: "您还没有选中商品哦",
+          forbidClick: true,
+          duration: 1500,
+        });
+      } else {
+        this.$dialog
+          .confirm({
+            title: "温馨提示",
+            message: "您确定要提交订单吗",
+          })
+          .then(() => {
+            this.$toast({
+              type: "success",
+              message: `提交${this.checkedLength}条数据成功`,
+              forbidClick: true,
+              duration: 1500,
+            });
+
+            setTimeout(() => {
+              this.clearCartList();
+              this.checkedAll = false;
+            }, 1500);
+          })
+          .catch((err) => err);
+      }
+    },
   },
 };
 </script>

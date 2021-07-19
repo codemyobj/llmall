@@ -3,7 +3,8 @@ import {
   SET_TABBAR_SHOW,
   SET_CART_LIST,
   ADD_TO_CART,
-  ADD_COUNT
+  ADD_COUNT,
+  CLEAR_CART_LIST
 } from './types'
 
 export default {
@@ -38,5 +39,15 @@ export default {
       duration: 1500
     })
     localStorage.setItem('cartList', JSON.stringify(state.cartList))
+  },
+  [CLEAR_CART_LIST](state) {
+    let result = state.cartList.filter(item => item.checked !== true)
+    if (result.length === 0) {
+      localStorage.removeItem('cartList')
+      state.cartList = []
+    } else {
+      state.cartList = result
+      localStorage.setItem('cartList', JSON.stringify(state.cartList))
+    }
   }
 }
