@@ -3,7 +3,8 @@ import {
   SET_TABBAR_SHOW,
   SET_CART_LIST,
   ADD_TO_CART,
-  ADD_COUNT
+  ADD_COUNT,
+  SET_LOADING
 } from './types'
 
 export default {
@@ -38,5 +39,8 @@ export default {
       duration: 1500
     })
     localStorage.setItem('cartList', JSON.stringify(state.cartList))
+  },
+  [SET_LOADING](state, bol) {
+    state.isLoading = bol
   }
 }
