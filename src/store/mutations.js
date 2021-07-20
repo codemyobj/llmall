@@ -4,11 +4,7 @@ import {
   SET_CART_LIST,
   ADD_TO_CART,
   ADD_COUNT,
-<<<<<<< HEAD
-  CLEAR_CART_LIST
-=======
   SET_LOADING
->>>>>>> category
 } from './types'
 
 export default {
@@ -44,19 +40,7 @@ export default {
     })
     localStorage.setItem('cartList', JSON.stringify(state.cartList))
   },
-<<<<<<< HEAD
-  [CLEAR_CART_LIST](state) {
-    let result = state.cartList.filter(item => item.checked !== true)
-    if (result.length === 0) {
-      localStorage.removeItem('cartList')
-      state.cartList = []
-    } else {
-      state.cartList = result
-      localStorage.setItem('cartList', JSON.stringify(state.cartList))
-    }
-=======
   [SET_LOADING](state, bol) {
     state.isLoading = bol
->>>>>>> category
   }
 }

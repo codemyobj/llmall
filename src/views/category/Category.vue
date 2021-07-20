@@ -9,6 +9,8 @@
     />
     <scroll class="scroll-height" ref="scroll">
       <subcategory :category-list="subcategoryList" />
+      <tab-control :titles="titleList" @tabClick="tabClick" ref="tabControl" />
+      <goods-list :goods="categoryDetailList" :goods-height="false" />
     </scroll>
   </div>
 </template>
@@ -18,8 +20,14 @@ import NavBar from "@/components/common/navbar/NavBar.vue";
 import SlideBar from "./children/SlideBar.vue";
 import Subcategory from "./children/Subcategory.vue";
 import Scroll from "@/components/common/scroll/Scroll.vue";
+import TabControl from "@/components/content/tabControl/TabControl.vue";
+import GoodsList from "@/components/content/goods/GoodsList.vue";
 
-import { getCategory, getSubcategory } from "@/network/category";
+import {
+  getCategory,
+  getSubcategory,
+  getCategoryDetail,
+} from "@/network/category";
 
 export default {
   name: "Category",
@@ -28,6 +36,8 @@ export default {
     SlideBar,
     Subcategory,
     Scroll,
+    TabControl,
+    GoodsList,
   },
   props: {},
   data() {
@@ -35,6 +45,8 @@ export default {
       categoryList: [],
       subcategoryList: [],
       currentIndex: 0,
+      titleList: ["流行", "新款", "精选"],
+      categoryDetailList: [],
     };
   },
   created() {
@@ -44,6 +56,9 @@ export default {
     this.$refs.scroll.refresh();
     this.$store.commit("setLoading", true);
   },
+  deactivated() {
+    this.backTop();
+  },
   methods: {
     _getCategory() {
       getCategory().then((res) => {
@@ -51,6 +66,10 @@ export default {
         this.categoryList = data.category.list;
         this.$nextTick(() => {
           this._getSubcategory(this.categoryList[0].maitKey);
+          this._getCategoryDetail(
+            this.categoryList[this.currentIndex].miniWallkey,
+            "pop"
+          );
         });
       });
     },
@@ -59,10 +78,31 @@ export default {
         this.subcategoryList = [...res.data.list];
       });
     },
+    _getCategoryDetail(key, type) {
+      getCategoryDetail(key, type).then((res) => {
+        this.categoryDetailList = [...res];
+      });
+    },
     slideBarItemClick({ maitKey, index }) {
       if (this.currentIndex === index) return;
       this.currentIndex = index;
+      this.$refs.tabControl.curIndex = 0;
+      this._getCategoryDetail(
+        this.categoryList[this.currentIndex].miniWallkey,
+        "pop"
+      );
       this._getSubcategory(maitKey);
+      this.backTop();
+    },
+    tabClick(index) {
+      const typeList = ["pop", "new", "sell"];
+      this._getCategoryDetail(
+        this.categoryList[this.currentIndex].miniWallkey,
+        typeList[index]
+      );
+    },
+    backTop() {
+      this.$refs.scroll.scrollTo(0, 0);
     },
   },
 };

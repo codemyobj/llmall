@@ -12,3 +12,13 @@ export function getSubcategory(maitKey) {
     }
   }).catch(err => err)
 }
+
+export function getCategoryDetail(miniWallkey, type) {
+  return axios({
+    url: '/subcategory/detail',
+    params: {
+      miniWallkey,
+      type
+    }
+  })
+}

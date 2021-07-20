@@ -22,7 +22,7 @@ export default {
     },
     activeColor: {
       type: String,
-      default: "deeppink",
+      default: "#ff0000",
     },
   },
   computed: {
