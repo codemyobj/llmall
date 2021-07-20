@@ -36,7 +36,7 @@ export default {
       currentIndex: 0,
     };
   },
-  activated() {
+  updated() {
     this.$refs.scroll.refresh();
   },
   methods: {

@@ -52,12 +52,8 @@ export default {
   created() {
     this._getCategory();
   },
-  activated() {
+  updated() {
     this.$refs.scroll.refresh();
-    this.$store.commit("setLoading", true);
-  },
-  deactivated() {
-    this.backTop();
   },
   methods: {
     _getCategory() {
